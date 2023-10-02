@@ -6,3 +6,5 @@ Run ‘pip install -r requirements.txt’
 Make sure flask is installed 
 export FLASK_APP=run.py
 Python run.py
+
+Lets go!
