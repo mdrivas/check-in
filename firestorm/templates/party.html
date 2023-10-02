@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ image_file }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ current_user.username }}</h2>
+                <p class="text-secondary">{{ current_user.email }}</p>
+            </div>
+        </div>  
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+            <tr>
+              <td>{{ user.username }}</td>
+              <td>{{ user.status }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    <div class="content-section">
+        <div>
+            <h2>Active Parties</h2><br>
+            <h3>Wokout Check In</h3>
+            <p>(4) users </p>
+        </div>
+        <div class="insights">
+            <div class="status-div">
+                <H4>Daily Check-In</H4>
+                <p>Complete</p>
+            </div>
+            <div class="party-status-div">
+                <H4>Party Status</H4>
+                <p>4/4</p>
+            </div>
+            <div class="party-status-div">
+                <H4>Party Streak</H4>
+                <p>3 days</p>
+            </div>
+        </div>
+    </div>
+    {% for post in posts %}
+    <article class="media content-section">
+      <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
+          <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        </div>
+        <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+      </div>
+    </article>
+{% endfor %}
+    
+{% endblock content %}

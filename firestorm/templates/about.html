@@ -1,0 +1,96 @@
+
+{% extends "layout.html" %}
+{% block content %}
+    <h1>About Page</h1>
+
+<!-- User List -->
+    <h2>User List</h2>
+    <ul id="user-list">
+        {% for user in users.values() %}
+        <li>{{ user.username }}</li>
+        {% if user.get_tasks() %}
+        <ul>
+            {% for task in user.get_tasks() %}
+            <li>Task: {{ task.taskname }} - Status: <span id="{{ user.username }}_{{ task.taskname }}">{{ task.status }}</span>
+                <button onclick="updateStatus('{{ user.username }}', '{{ task.taskname }}')">Toggle</button></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No tasks for this user.</p>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    <br>
+
+ 
+    <H1>GYM TRACKER</H1>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Task</th>
+            <th>Status</th>
+          </tr>
+          <tr>
+            <td>Alex</td>
+            <td>GYM</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Matt</td>
+            <td>GYM</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Theo</td>
+            <td>GYM</td>
+            <td>No</td>
+          </tr>
+    </table>
+    <br>
+
+
+    <script>
+        // JavaScript to handle task status update
+        function updateStatus(username, taskname) {
+            const statusElement = document.getElementById(`${username}_${taskname}`);
+            const currentStatus = statusElement.innerText;
+            const newStatus = currentStatus === 'ON' ? 'OFF' : 'ON';
+            fetch('/update_status', {
+                method: 'POST',
+                body: JSON.stringify({ username: username, taskname: taskname, status: newStatus }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusElement.innerText = newStatus;
+                }
+            });
+        }
+    </script>
+
+    <H1>Personal Tracker</H1>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Toggle</th>
+        </tr>
+        {% for user in users.values() %}
+            {% for task in user.get_tasks() %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ task.taskname }}</td>
+                    <td><span id="{{ user.username }}_{{ task.taskname }}">{{ task.status }}</span></td>
+                    <td><button onclick="updateStatus('{{ user.username }}', '{{ task.taskname }}')">Toggle</button></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+
+
+{% endblock content %}
+
